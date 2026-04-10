@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RaidForce | Minecraft PE 1.1.5</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ff4747;
+            --secondary-color: #2f2f2f;
+            --accent-color: #ffd700;
+            --bg-dark: #121212;
+            --text-light: #f5f5f5;
+            --bot-bg: #1e1e1e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        header {
+            width: 100%; padding: 40px 20px; text-align: center;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://wallpaperaccess.com/full/1321159.jpg');
+            background-size: cover; border-bottom: 3px solid var(--primary-color);
+        }
+        .logo h1 { font-size: 3rem; margin: 0; color: var(--primary-color); text-shadow: 0 0 15px rgba(255, 71, 71, 0.6); }
+        .version { background: var(--primary-color); padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: bold; }
+        
+        .container { width: 90%; max-width: 500px; margin-top: -30px; padding-bottom: 100px; }
+        .card { background: var(--secondary-color); border-radius: 15px; padding: 25px; margin-bottom: 20px; border: 1px solid #444; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        .ip-block { background: #1a1a1a; padding: 12px; border-radius: 10px; border: 1px dashed var(--primary-color); cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .ip-block:active { transform: scale(0.95); }
+        .ip-label { color: #888; font-size: 0.7rem; display: block; margin-bottom: 2px; }
+
+        .btn { text-decoration: none; padding: 15px; border-radius: 10px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; margin-bottom: 15px; border: none; cursor: pointer; color: #fff; width: 100%; font-size: 1rem; }
+        .btn-rules { background: #444; border: 1px solid var(--primary-color); }
+        .btn-shop { background: var(--accent-color); color: #000; }
+        .btn-vk { background: #0077ff; }
+        .btn-tg { background: #229ED9; }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+
+        /* ВИДЖЕТ БОТА */
+        #bot-widget { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+        #bot-button { width: 60px; height: 60px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; cursor: pointer; box-shadow: 0 5px 20px rgba(255, 71, 71, 0.4); }
+        #bot-window { display: none; position: fixed; bottom: 90px; right: 20px; width: 300px; max-height: 400px; background: var(--bot-bg); border-radius: 15px; border: 1px solid var(--primary-color); flex-direction: column; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+        .bot-header { background: var(--primary-color); padding: 12px; font-weight: bold; display: flex; justify-content: space-between; }
+        .bot-messages { padding: 15px; overflow-y: auto; flex-grow: 1; font-size: 0.9rem; }
+        .bot-msg { background: #333; padding: 10px; border-radius: 10px; margin-bottom: 10px; line-height: 1.4; }
+        .bot-options { padding: 10px; display: flex; flex-wrap: wrap; gap: 5px; background: #252525; }
+        .opt-btn { background: #444; border: 1px solid #666; color: white; padding: 6px 10px; border-radius: 5px; font-size: 0.75rem; cursor: pointer; }
+
+        /* МОДАЛКА ПРАВИЛ */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); overflow-y: auto; }
+        .modal-content { background: var(--secondary-color); margin: 5% auto; padding: 20px; width: 85%; max-width: 600px; border-radius: 15px; border: 1px solid var(--primary-color); position: relative; }
+        .close { float: right; font-size: 30px; cursor: pointer; color: var(--primary-color); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>RAIDFORCE</h1>
+            <span class="version">MCPE 1.1.5</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <p><span style="color:#2ecc71">●</span> Сервер Онлайн</p>
+            <div class="ip-block" onclick="copyText('raidforce.mc-serv.fun')">
+                <span class="ip-label">АДРЕС (IP)</span>
+                <strong>raidforce.mc-serv.fun</strong>
+            </div>
+            <div class="ip-block" onclick="copyText('19134')">
+                <span class="ip-label">ПОРТ</span>
+                <strong>19134</strong>
+            </div>
+            <p style="font-size: 0.75rem; color: #888; margin-top: 10px;">Нажми, чтобы скопировать</p>
+        </div>
+
+        <button class="btn btn-rules" onclick="openRules()"><i class="fas fa-gavel"></i> ПРАВИЛА</button>
+        <a href="https://raidforce.trademc.org" class="btn btn-shop" target="_blank"><i class="fas fa-shopping-cart"></i> МАГАЗИН ДОНАТА</a>
+        <a href="https://vk.com/raidforce" class="btn btn-vk" target="_blank"><i class="fab fa-vk"></i> ГРУППА ВКОНТАКТЕ</a>
+        <a href="https://t.me/RaidForces" class="btn btn-tg" target="_blank"><i class="fab fa-telegram-plane"></i> ТЕЛЕГРАМ КАНАЛ</a>
+    </div>
+
+    <div id="bot-widget">
+        <div id="bot-window">
+            <div class="bot-header">
+                <span>🤖 RaidBot</span>
+                <span style="cursor:pointer" onclick="toggleBot()">×</span>
+            </div>
+            <div class="bot-messages" id="botMsgs">
+                <div class="bot-msg">Привет! Я помогу освоиться на RaidForce. Что тебя интересует?</div>
+            </div>
+            <div class="bot-options">
+                <button class="opt-btn" onclick="botAnswer('start')">Как играть?</button>
+                <button class="opt-btn" onclick="botAnswer('report')">Нашел читера/дюп</button>
+                <button class="opt-btn" onclick="botAnswer('help')">Связь с админом</button>
+            </div>
+        </div>
+        <div id="bot-button" onclick="toggleBot()">
+            <i class="fas fa-robot"></i>
+        </div>
+    </div>
+
+    <div id="rulesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeRules()">&times;</span>
+            <div class="rules-text">
+                <h2 style="color:var(--primary-color)">ПРАВИЛА RAIDFORCE</h2>
+                <h3 style="color:var(--accent-color)">1. ОБЩИЕ ПОЛОЖЕНИЯ</h3>
+                <p>1.1. Мультиаккаунты (3+) — Бан 7д. 1.3. Плохой ник — Бан навсегда.</p>
+                <h3 style="color:var(--accent-color)">2. ИГРОВОЙ ПРОЦЕСС</h3>
+                <p>2.1. Читы/Макросы — Бан 7д / Повторно Бан по IP. 2.2. Баги/Дюп — Бан 14д.</p>
+                <h3 style="color:var(--accent-color)">3. ПРОВЕРКА (SS)</h3>
+                <p>3.2. Отказ от проверки/выход — Бан 30д. Наличие ТГ/ДС обязательно.</p>
+                <h3 style="color:var(--accent-color)">4. ЧАТ</h3>
+                <p>4.1. Оскорбление админ — Бан навсегда. 4.3. Реклама — Бан навсегда.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <center style="color:#555; font-size: 0.8rem; padding: 20px;">&copy; 2026 RaidForce Project</center>
+    </footer>
+
+    <script>
+        function toggleBot() {
+            const win = document.getElementById('bot-window');
+            win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function botAnswer(type) {
+            const msgs = document.getElementById('botMsgs');
+            let text = "";
+
+            if(type === 'start') {
+                text = "Чтобы начать играть: заходи на IP <b>raidforce.mc-serv.fun</b> порт <b>19134</b>. Используй команду <b>/cid</b> для защиты аккаунта и <b>/rg help</b>, чтобы узнать всё о приватах!";
+            } else if(type === 'report') {
+                text = "Нарушители не пройдут! Отправь жалобу админу <b>@strateg480</b> в Telegram. Укажи ник читера и прикрепи видео-доказательство.";
+            } else if(type === 'help') {
+                text = "По всем вопросам и тех. проблемам пиши нашему администратору: <b>@strateg480</b>. Мы всегда на связи!";
+            }
+
+            msgs.innerHTML += `<div class="bot-msg" style="background:#444; border-left: 3px solid var(--primary-color)">${text}</div>`;
+            msgs.scrollTop = msgs.scrollHeight;
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text);
+            alert("Скопировано: " + text);
+        }
+
+        function openRules() { document.getElementById('rulesModal').style.display = 'block'; }
+        function closeRules() { document.getElementById('rulesModal').style.display = 'none'; }
+        window.onclick = function(e) { if(e.target == document.getElementById('rulesModal')) closeRules(); }
+    </script>
+</body>
+</html>
