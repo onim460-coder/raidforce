@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RaidForce | Minecraft PE 1.1.5</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ff4747;
+            --secondary-color: #2f2f2f;
+            --accent-color: #ffd700;
+            --bg-dark: #121212;
+            --text-light: #f5f5f5;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* Шапка сайта */
+        header {
+            width: 100%;
+            padding: 40px 20px;
+            text-align: center;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://wallpaperaccess.com/full/1321159.jpg');
+            background-size: cover;
+            background-position: center;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .logo h1 {
+            font-size: 3rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: var(--primary-color);
+            text-shadow: 0 0 15px rgba(255, 71, 71, 0.6);
+        }
+
+        .version {
+            background: var(--primary-color);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* Основной контент */
+        .container {
+            width: 90%;
+            max-width: 500px;
+            margin-top: -30px;
+            padding-bottom: 50px;
+        }
+
+        .card {
+            background: var(--secondary-color);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            border: 1px solid #444;
+        }
+
+        .server-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 1.1rem;
+        }
+
+        .ip-block {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px dashed var(--primary-color);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .ip-block:active {
+            transform: scale(0.95);
+        }
+
+        .ip-label {
+            color: #888;
+            font-size: 0.8rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Кнопки соцсетей */
+        .links-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn-shop { background-color: var(--accent-color); color: #000; }
+        .btn-vk { background-color: #0077ff; color: #fff; }
+        .btn-tg { background-color: #229ED9; color: #fff; }
+
+        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .status-dot {
+            height: 10px;
+            width: 10px;
+            background-color: #2ecc71;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+            box-shadow: 0 0 10px #2ecc71;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>RAIDFORCE</h1>
+            <span class="version">MCPE 1.1.5</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <p><span class="status-dot"></span> Сервер онлайн</p>
+            <div class="server-info">
+                <div class="ip-block" onclick="copyToClipboard('raidforce.mc-serv.fun')">
+                    <span class="ip-label">АДРЕС (IP)</span>
+                    <strong>raidforce.mc-serv.fun</strong>
+                </div>
+                <div class="ip-block" onclick="copyToClipboard('19134')">
+                    <span class="ip-label">ПОРТ</span>
+                    <strong>19134</strong>
+                </div>
+            </div>
+            <p style="font-size: 0.8rem; color: #888; margin-top: 15px;">Нажми на IP, чтобы скопировать</p>
+        </div>
+
+        <div class="links-grid">
+            <a href="https://raidforce.trademc.org" class="btn btn-shop" target="_blank">
+                <i class="fas fa-shopping-cart"></i> МАГАЗИН ДОНАТА
+            </a>
+            <a href="https://vk.com/raidforce" class="btn btn-vk" target="_blank">
+                <i class="fab fa-vk"></i> МЫ В ВКОНТАКТЕ
+            </a>
+            <a href="https://t.me/RaidForces" class="btn btn-tg" target="_blank">
+                <i class="fab fa-telegram-plane"></i> ТЕЛЕГРАМ КАНАЛ
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 RaidForce Team. Приятной игры!
+    </footer>
+
+    <script>
+        function copyToClipboard(text) {
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            alert('Скопировано: ' + text);
+        }
+    </script>
+</body>
+</html>
