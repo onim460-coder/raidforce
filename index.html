@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RaidForce | Minecraft PE 1.1.5</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ff4747;
+            --secondary-color: #2f2f2f;
+            --accent-color: #ffd700;
+            --bg-dark: #121212;
+            --text-light: #f5f5f5;
+            --bot-bg: #1e1e1e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center;
+            overflow-x: hidden;
+        }
+
+        #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%); }
+
+        .event-banner { width: 100%; background: var(--primary-color); color: white; padding: 10px; text-align: center; font-weight: bold; font-size: 0.9rem; z-index: 10; border-bottom: 1px solid rgba(0,0,0,0.2); }
+        .event-active { background: #2ecc71 !important; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+
+        header {
+            width: 100%; padding: 50px 20px; text-align: center;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.6)), url('https://wallpaperaccess.com/full/1321159.jpg');
+            background-size: cover; background-position: center; border-bottom: 3px solid var(--primary-color);
+        }
+        .logo h1 { font-size: 3.5rem; margin: 0; color: var(--primary-color); text-shadow: 0 0 20px rgba(255, 71, 71, 0.5); letter-spacing: 2px; }
+        .version { background: var(--primary-color); padding: 5px 20px; border-radius: 20px; font-size: 0.9rem; font-weight: bold; }
+        
+        .container { width: 95%; max-width: 500px; margin-top: -35px; padding-bottom: 100px; position: relative; }
+        .card { background: var(--secondary-color); border-radius: 18px; padding: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 15px 35px rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
+        .online-count { color: #2ecc71; font-weight: bold; margin-bottom: 12px; display: block; text-align: center; font-size: 1.1rem; }
+
+        .ip-block { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; border: 1px dashed var(--primary-color); cursor: pointer; transition: 0.3s; margin-top: 10px; text-align: center; }
+        .ip-block:hover { background: rgba(255, 71, 71, 0.1); transform: scale(1.02); }
+        .ip-label { color: #aaa; font-size: 0.75rem; display: block; margin-bottom: 4px; }
+
+        .btn { text-decoration: none; padding: 16px; border-radius: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 12px; transition: 0.3s; margin-bottom: 12px; border: none; cursor: pointer; color: #fff; width: 100%; font-size: 1rem; box-sizing: border-box; }
+        .btn-rules { background: transparent; border: 2px solid var(--primary-color); }
+        .btn-admin { background: #555; }
+        .btn-shop { background: var(--accent-color); color: #000; }
+        .btn-vk { background: #0077ff; }
+        .btn-tg { background: #24A1DE; }
+
+        /* --- УЛУЧШЕННЫЙ RAIDBOT --- */
+        #bot-widget { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+        #bot-button { width: 60px; height: 60px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; cursor: pointer; box-shadow: 0 5px 20px rgba(255, 71, 71, 0.4); border: none; outline: none; transition: 0.3s; }
+        #bot-button:hover { transform: scale(1.1); }
+        
+        #bot-window { 
+            display: none; position: fixed; bottom: 90px; right: 20px; width: 320px; height: 480px; 
+            background: var(--bot-bg); border-radius: 20px; flex-direction: column; overflow: hidden; 
+            box-shadow: 0 15px 50px rgba(0,0,0,0.8); border: 1px solid rgba(255,71,71,0.3); animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .bot-header { background: var(--primary-color); padding: 15px; display: flex; align-items: center; gap: 12px; font-weight: bold; }
+        .bot-status { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; display: inline-block; margin-right: 5px; box-shadow: 0 0 5px #2ecc71; }
+        
+        .bot-messages { padding: 15px; overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; gap: 10px; background: #161616; scroll-behavior: smooth; }
+        .msg { max-width: 85%; padding: 10px 14px; border-radius: 15px; font-size: 0.85rem; line-height: 1.4; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        .msg-ai { align-self: flex-start; background: #333; color: white; border-bottom-left-radius: 2px; }
+        .msg-user { align-self: flex-end; background: var(--primary-color); color: white; border-bottom-right-radius: 2px; }
+        
+        .typing { font-size: 0.75rem; color: #888; margin-bottom: 5px; display: none; padding-left: 5px; }
+        .bot-options { padding: 12px; display: flex; flex-wrap: wrap; gap: 8px; background: #1e1e1e; border-top: 1px solid #333; }
+        .opt-btn { background: rgba(255, 71, 71, 0.1); border: 1px solid var(--primary-color); color: var(--primary-color); padding: 8px 14px; border-radius: 20px; font-size: 0.75rem; cursor: pointer; transition: 0.2s; font-weight: 500; }
+        .opt-btn:hover { background: var(--primary-color); color: white; }
+
+        /* --- МОДАЛКИ --- */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); }
+        .modal-content { background: var(--secondary-color); margin: 5% auto; padding: 30px; width: 90%; max-width: 600px; border-radius: 20px; border: 1px solid var(--primary-color); position: relative; max-height: 85vh; overflow-y: auto; }
+        .close { float: right; font-size: 28px; cursor: pointer; color: var(--primary-color); position: sticky; top: -10px; }
+        
+        .rules-category, .staff-role { color: var(--primary-color); font-weight: bold; border-bottom: 1px solid #444; margin: 25px 0 12px; padding-bottom: 5px; text-transform: uppercase; }
+        .rule-item { margin-bottom: 12px; font-size: 0.9rem; line-height: 1.5; color: #e0e0e0; }
+        .rule-item b { color: var(--primary-color); }
+        .staff-name { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 3px solid var(--primary-color); }
+
+        #toast { visibility: hidden; min-width: 200px; background: var(--primary-color); color: #fff; text-align: center; border-radius: 10px; padding: 16px; position: fixed; z-index: 10000; left: 50%; bottom: 30px; transform: translateX(-50%); font-weight: bold; }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        @keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
+        @keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <div class="event-banner" id="event-bar">Синхронизация...</div>
+    <div id="particles-js"></div>
+
+    <header>
+        <div class="logo"><h1>RAIDFORCE</h1><span class="version">MCPE 1.1.5</span></div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <span class="online-count" id="server-status">Опрос сервера...</span>
+            <div class="ip-block" onclick="copyText('raidforce.mc-serv.fun')">
+                <span class="ip-label">АДРЕС (Нажми для копирования)</span>
+                <strong>raidforce.mc-serv.fun</strong>
+            </div>
+            <div class="ip-block" onclick="copyText('19134')">
+                <span class="ip-label">ПОРТ</span>
+                <strong>19134</strong>
+            </div>
+        </div>
+
+        <button class="btn btn-rules" onclick="openModal('rulesModal')"><i class="fas fa-file-contract"></i> ПРАВИЛА СЕРВЕРА</button>
+        <button class="btn btn-admin" onclick="openModal('staffModal')"><i class="fas fa-users-cog"></i> СОСТАВ АДМИНИСТРАЦИИ</button>
+        <a href="https://raidforce.trademc.org" class="btn btn-shop" target="_blank"><i class="fas fa-shopping-basket"></i> МАГАЗИН ДОНАТА</a>
+        <a href="https://vk.com/club235472472" class="btn btn-vk" target="_blank"><i class="fab fa-vk"></i> ГРУППА ВК</a>
+        <a href="https://t.me/raidforcepe" class="btn btn-tg" target="_blank"><i class="fab fa-telegram-plane"></i> КАНАЛ TELEGRAM</a>
+
+        <div style="margin-top:20px; border-radius: 15px; overflow: hidden; border: 1px solid #333;">
+            <iframe src="https://vk.com/widget_community.php?gid=235472472&mode=4&width=auto&height=450&color1=2f2f2f&color2=f5f5f5&color3=ff4747" width="100%" height="450" frameborder="0" scrolling="no"></iframe>
+        </div>
+    </div>
+
+    <div id="bot-widget">
+        <div id="bot-window">
+            <div class="bot-header">
+                <i class="fas fa-robot"></i> 
+                <span>RaidBot Support</span>
+                <span style="margin-left:auto; font-size: 0.7rem; font-weight: normal;"><span class="bot-status"></span>Онлайн</span>
+                <span style="margin-left:15px; cursor:pointer;" onclick="toggleBot()">×</span>
+            </div>
+            <div class="bot-messages" id="botMsgs">
+                <div id="typing" class="typing">Печатает...</div>
+            </div>
+            <div class="bot-options" id="botOpts">
+                </div>
+        </div>
+        <div id="bot-button" onclick="toggleBot()"><i class="fas fa-comment-dots"></i></div>
+    </div>
+
+    <div id="rulesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('rulesModal')">&times;</span>
+            <h2 style="text-align:center; color:var(--primary-color)">ПРАВИЛА RAIDFORCE</h2>
+            
+            <div class="rules-category">1. ОБЩИЕ ПОЛОЖЕНИЯ</div>
+            <div class="rule-item"><b>1.1.</b> Регистрация более 3-х аккаунтов (мультиаккаунт) — <b>Бан на 7 дней.</b></div>
+            <div class="rule-item"><b>1.2.</b> Ответственность за аккаунт несет только владелец. — Наказание не обжалуется.</div>
+            <div class="rule-item"><b>1.3.</b> Некорректный никнейм (маты, оскорбления, префиксы Admin/Mod/Создатель/хелпер) — <b>Бан навсегда.</b></div>
+            <div class="rule-item"><b>1.4.</b> Продажа ресурсов/услуг за реальные деньги (кроме донат-магазина) — <b>Бан навсегда.</b></div>
+
+            <div class="rules-category">2. ИГРОВОЙ ПРОЦЕСС И ЧИТЫ</div>
+            <div class="rule-item"><b>2.1.</b> Использование стороннего ПО (читы, макросы, кликеры, X-Ray) — <b>Бан на 7 дней / Повторно: Бан по IP.</b></div>
+            <div class="rule-item"><b>2.2.</b> Использование багов (дюп, проход сквозь блоки, лив из ловушек багом) — <b>Бан от 14 дней.</b></div>
+            <div class="rule-item"><b>2.3.</b> Создание лаг-машин — <b>Бан навсегда + удаление постройки.</b></div>
+
+            <div class="rules-category">3. ПРОВЕРКА НА ЧИТЫ (SS)</div>
+            <div class="rule-item"><b>3.1.</b> Хелпер может вызвать любого на проверку при подозрении.</div>
+            <div class="rule-item"><b>3.2.</b> Отказ от проверки — <b>Бан на 30 дней.</b></div>
+            <div class="rule-item"><b>3.3.</b> Выход из игры после уведомления о проверке — <b>Бан на 30 дней.</b></div>
+            <div class="rule-item"><b>3.7.</b> Отсутствие ТГ/Discord — Не оправдание. <b>Бан на 30 дней.</b></div>
+
+            <div class="rules-category">4. ЧАТ И ОБЩЕНИЕ</div>
+            <div class="rule-item"><b>4.1.</b> Оскорбление администрации или проекта — <b>Бан навсегда.</b></div>
+            <div class="rule-item"><b>4.2.</b> Тяжкие оскорбления (родные, расизм, нацизм) — <b>Мут от 4 часов / Бан на 3 дня.</b></div>
+        </div>
+    </div>
+
+    <div id="staffModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('staffModal')">&times;</span>
+            <h2 style="text-align:center; color:var(--primary-color)">АДМИНИСТРАЦИЯ</h2>
+            <div class="staff-role">👑 Владельцы</div>
+            <div class="staff-name">Be3uH4uk</div>
+            <div class="staff-name">Hate</div>
+            <div class="staff-role">🛡️ Администратор</div>
+            <div class="staff-name">_apelsin_</div>
+            <div class="staff-role">💻 Разработчик</div>
+            <div class="staff-name">PaZiTiV_</div>
+        </div>
+    </div>
+
+    <div id="toast">Скопировано!</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS("particles-js", { "particles": { "number": { "value": 40 }, "color": { "value": "#ff4747" }, "move": { "enable": true, "speed": 1.5, "direction": "top" } } });
+
+        async function updateStatus() {
+            try {
+                const res = await fetch('https://api.mcstatus.io/v2/status/bedrock/jajhshehdhkdk.mc-serv.fun:13803');
+                const data = await res.json();
+                const status = document.getElementById('server-status');
+                const banner = document.getElementById('event-bar');
+                if(data.online) {
+                    const count = data.players.online;
+                    status.innerHTML = `● Онлайн: ${count}/${data.players.max}`;
+                    if(count >= 5) { banner.innerHTML = "⚔️ МИСТИК ПОЯВИЛСЯ! СКОРЕЕ НА СЕРВЕР!"; banner.classList.add('event-active'); }
+                    else { banner.innerHTML = `🔥 МИСТИК ПОЯВИТСЯ ПРИ 5 ИГРОКАХ (ЕЩЕ: ${5-count})`; banner.classList.remove('event-active'); }
+                } else { status.innerHTML = "● Сервер выключен"; }
+            } catch(e) {}
+        }
+        setInterval(updateStatus, 10000); updateStatus();
+
+        // ЛОГИКА УЛУЧШЕННОГО БОТА
+        const botData = {
+            start: {
+                text: "Привет! Я помощник RaidBot. У тебя возникли трудности или есть вопрос?",
+                options: [
+                    { label: "IP и версия", link: "ip" },
+                    { label: "Донат", link: "donate" },
+                    { label: "Жалоба/Разбан", link: "help" }
+                ]
+            },
+            ip: {
+                text: "Заходи на <b>raidforce.mc-serv.fun</b>, порт <b>19134</b>. Рекомендуемая версия — <b>1.1.5</b>. Нужна помощь с чем-то еще?",
+                options: [
+                    { label: "Проблема с донатом", link: "donate" },
+                    { label: "Связаться с админом", link: "admin" }
+                ]
+            },
+            donate: {
+                text: "Если донат не пришел в течение 10 минут, обязательно подготовь <b>чек оплаты</b> и напиши нашему Владельцу в ТГ.",
+                options: [
+                    { label: "ТГ Владельца", link: "admin" },
+                    { label: "Вернуться назад", link: "start" }
+                ]
+            },
+            help: {
+                text: "По вопросам разбана или жалоб на игроков/администрацию обращайся напрямую к @strateg480. У тебя есть доказательства (видео/скрины)?",
+                options: [
+                    { label: "Написать админу", link: "admin" },
+                    { label: "Я просто смотрю", link: "start" }
+                ]
+            },
+            admin: {
+                text: "Контакт Владельца в Telegram: <b>@strateg480</b>. <br><br>Пожалуйста, сразу описывай суть проблемы, чтобы получить быстрый ответ!",
+                options: [
+                    { label: "Назад в меню", link: "start" }
+                ]
+            }
+        };
+
+        function toggleBot() { 
+            const win = document.getElementById('bot-window');
+            win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function botSpeak(key) {
+            const container = document.getElementById('botMsgs');
+            const typing = document.getElementById('typing');
+            const optsContainer = document.getElementById('botOpts');
+            const data = botData[key];
+
+            // Очищаем текущие опции
+            optsContainer.innerHTML = "";
+            typing.style.display = 'block';
+            container.scrollTop = container.scrollHeight;
+
+            setTimeout(() => {
+                typing.style.display = 'none';
+                container.insertAdjacentHTML('beforeend', `<div class="msg msg-ai">${data.text}</div>`);
+                
+                // Создаем новые кнопки
+                data.options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = "opt-btn";
+                    btn.innerText = opt.label;
+                    btn.onclick = () => {
+                        container.insertAdjacentHTML('beforeend', `<div class="msg msg-user">${opt.label}</div>`);
+                        botSpeak(opt.link);
+                    };
+                    optsContainer.appendChild(btn);
+                });
+
+                container.scrollTop = container.scrollHeight;
+            }, 800);
+        }
+
+        // Авто-приветствие через 3 сек
+        setTimeout(() => {
+            if (document.getElementById('bot-window').style.display !== 'flex') {
+                botSpeak('start');
+            }
+        }, 3000);
+
+        function copyText(txt) { navigator.clipboard.writeText(txt); const t = document.getElementById('toast'); t.className = "show"; setTimeout(() => t.className = "", 2500); }
+        function openModal(id) { document.getElementById(id).style.display = 'block'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    </script>
+</body>
+</html>
