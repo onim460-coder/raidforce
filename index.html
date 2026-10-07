@@ -4,294 +4,418 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Правила сервера AevionMC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            background-color: #0b0b0b;
-            color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px 10px;
-            display: flex;
-            justify-content: center;
+        :root {
+            --bg-dark: #07090e;
+            --card-bg: rgba(15, 20, 32, 0.7);
+            --card-border: rgba(255, 255, 255, 0.07);
+            --accent-cyan: #00f2fe;
+            --accent-purple: #7928ca;
+            --accent-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            --danger-color: #ff3b5c;
+            --danger-bg: rgba(255, 59, 92, 0.05);
+            --success-color: #00e676;
+            --text-main: #e2e8f0;
+            --text-sub: #94a3b8;
+            --text-dim: #64748b;
         }
 
-        .container {
-            max-width: 650px;
-            width: 100%;
-            padding: 15px;
-        }
-
-        .server-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-        .server-header h1 {
-            font-size: 32px;
-            color: #798cb9;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin: 0 0 5px 0;
-        }
-        .server-header p {
-            color: #ff3333;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin: 0;
-            font-size: 14px;
-            letter-spacing: 1px;
-        }
-
-        .provisions {
-            background-color: rgba(255, 255, 255, 0.03);
-            border-left: 3px solid #798cb9;
-            padding: 15px;
-            border-radius: 0 6px 6px 0;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-        .provision-item {
-            margin-bottom: 12px;
-        }
-        .provision-item:last-child {
-            margin-bottom: 0;
-        }
-        .provision-icon {
-            color: #798cb9;
-            margin-right: 5px;
-        }
-
-        .alert-text {
-            color: #ffffff;
-            margin-bottom: 15px;
-            font-size: 15px;
-        }
-        .alert-icon {
-            color: #ff3333;
-            font-weight: bold;
-            margin-right: 5px;
-        }
-
-        hr {
-            border: 0;
-            border-top: 1px solid #ffffff;
-            margin: 25px 0;
-            opacity: 0.6;
-        }
-
-        .navigation-title {
-            text-align: center;
-            font-style: italic;
-            font-size: 15px;
-            color: #aaaaaa;
-            margin-bottom: 15px;
-            letter-spacing: 1px;
-        }
-        .nav-list {
-            list-style: none;
-            padding: 0;
-            margin: 0 auto;
-            max-width: 450px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .nav-link {
-            display: inline-block;
-            color: #798cb9;
-            text-decoration: none;
-            background-color: rgba(121, 140, 185, 0.15);
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 17px;
-            font-weight: 500;
-            transition: background-color 0.2s, transform 0.1s;
-            width: fit-content;
-        }
-        .nav-link:hover {
-            background-color: rgba(121, 140, 185, 0.25);
-            transform: translateX(3px);
-        }
-        .nav-link::before {
-            content: "• ";
-            color: #798cb9;
-        }
-
-        .notice-text {
-            font-style: italic;
-            margin-top: 12px;
-            color: #e0e0e0;
-            font-size: 15px;
-        }
-
-        .section-title {
-            font-size: 22px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 35px;
-            margin-bottom: 20px;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-        }
-        .section-title::before {
-            content: "❖ ";
-            margin-right: 10px;
-            color: #798cb9;
-            font-size: 18px;
-        }
-
-        .rule-item {
-            margin-bottom: 18px;
-            background-color: rgba(255, 255, 255, 0.01);
-            padding: 10px 15px;
-            border-left: 3px solid #4e5d7c;
-            border-radius: 0 6px 6px 0;
-            scroll-margin-top: 20px;
-        }
-        .rule-head {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: #ffffff;
-        }
-        .rule-punishment {
-            color: #cccccc;
-            font-size: 15px;
-            padding-left: 15px;
-            position: relative;
-        }
-        .rule-punishment::before {
-            content: "— ";
-            position: absolute;
-            left: 0;
-            color: #798cb9;
-        }
-
-        .exception-box {
-            background-color: rgba(46, 204, 113, 0.05);
-            border: 1px dashed #2ecc71;
-            padding: 10px 12px;
-            border-radius: 6px;
-            margin-top: 8px;
-            font-size: 14px;
-            color: #e0e0e0;
-        }
-        .exception-box strong {
-            color: #2ecc71;
-        }
-
-        .rule-item.danger {
-            border-left-color: #ff3333;
-            background-color: rgba(255, 51, 51, 0.01);
-        }
-
-        .faq-answer {
-            margin-top: 10px;
-            padding: 12px;
-            background-color: rgba(121, 140, 185, 0.05);
-            border-radius: 6px;
-            font-size: 14px;
-            color: #dddddd;
-            border-left: 2px solid #798cb9;
-        }
-        .faq-answer a {
-            color: #798cb9;
-            text-decoration: underline;
-        }
-        .faq-answer a:hover {
-            color: #a3b2d8;
-        }
-
-        .questions-title {
-            font-size: 19px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #ffffff;
-        }
-        .questions-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .question-link {
-            display: block;
-            color: #798cb9;
-            text-decoration: none;
-            background-color: rgba(121, 140, 185, 0.15);
-            padding: 10px 14px;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: background-color 0.2s, padding-left 0.2s;
+        * {
             box-sizing: border-box;
-        }
-        .question-link:hover {
-            background-color: rgba(121, 140, 185, 0.25);
-            padding-left: 20px;
         }
 
         html {
             scroll-behavior: smooth;
         }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 60%, rgba(121, 40, 202, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 24px 12px 80px 12px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 740px;
+            width: 100%;
+        }
+
+        /* Header */
+        .server-header {
+            text-align: center;
+            margin-bottom: 32px;
+            padding: 10px 0;
+        }
+        .server-header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 46px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin: 0;
+            background: linear-gradient(135deg, #ffffff 0%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+        .server-header p {
+            color: var(--danger-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 8px;
+            font-size: 12px;
+            letter-spacing: 2.5px;
+            display: inline-block;
+            background: rgba(255, 59, 92, 0.1);
+            padding: 6px 16px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 59, 92, 0.25);
+            box-shadow: 0 0 15px rgba(255, 59, 92, 0.15);
+        }
+
+        /* Provisions Block */
+        .provisions {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-top: 3px solid var(--accent-cyan);
+            padding: 22px;
+            border-radius: 14px;
+            margin-bottom: 24px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+        .provision-item {
+            margin-bottom: 14px;
+            font-size: 14.5px;
+            color: var(--text-main);
+        }
+        .provision-item:last-child {
+            margin-bottom: 0;
+        }
+        .provision-icon {
+            color: var(--accent-cyan);
+            margin-right: 6px;
+            font-weight: bold;
+        }
+
+        /* Alert Badge */
+        .alert-text {
+            background: rgba(15, 20, 32, 0.8);
+            border: 1px solid var(--card-border);
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .alert-icon {
+            font-size: 18px;
+        }
+
+        /* Navigation Bar */
+        .nav-wrapper {
+            position: sticky;
+            top: 15px;
+            z-index: 100;
+            background: rgba(7, 9, 14, 0.85);
+            backdrop-filter: blur(16px);
+            padding: 12px;
+            border-radius: 14px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 35px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+        .navigation-title {
+            text-align: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-sub);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+        }
+        .nav-link {
+            color: var(--text-main);
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--card-border);
+        }
+        .nav-link:hover {
+            background: var(--accent-gradient);
+            color: #000;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        /* Notice text */
+        .notice-container {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 35px;
+            border-left: 3px solid var(--accent-purple);
+        }
+        .notice-text {
+            font-style: italic;
+            color: var(--text-sub);
+            font-size: 13.5px;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin-top: 45px;
+            margin-bottom: 18px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+        }
+        .section-title::before {
+            content: "◆";
+            color: var(--accent-cyan);
+            font-size: 14px;
+        }
+
+        /* Rules */
+        .rule-item {
+            margin-bottom: 16px;
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--card-border);
+            border-left: 4px solid var(--accent-cyan);
+            padding: 16px 20px;
+            border-radius: 10px;
+            scroll-margin-top: 95px;
+            transition: all 0.2s ease;
+        }
+        .rule-item:hover {
+            border-color: rgba(0, 242, 254, 0.3);
+            transform: translateX(4px);
+        }
+        .rule-head {
+            font-size: 15.5px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+        .rule-punishment {
+            color: var(--text-sub);
+            font-size: 14px;
+            padding-left: 18px;
+            position: relative;
+            margin-bottom: 4px;
+        }
+        .rule-punishment::before {
+            content: "—";
+            position: absolute;
+            left: 0;
+            color: var(--accent-cyan);
+        }
+
+        .exception-box {
+            background-color: rgba(0, 230, 118, 0.05);
+            border: 1px dashed rgba(0, 230, 118, 0.3);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 13.5px;
+            color: var(--text-main);
+        }
+        .exception-box strong {
+            color: var(--success-color);
+        }
+
+        /* Danger Rules */
+        .rule-item.danger {
+            border-left-color: var(--danger-color);
+            background: var(--danger-bg);
+        }
+        .rule-item.danger:hover {
+            border-color: rgba(255, 59, 92, 0.4);
+        }
+        .rule-item.danger .rule-punishment::before {
+            color: var(--danger-color);
+        }
+
+        /* FAQ Section */
+        .questions-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 50px;
+            margin-bottom: 22px;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+        .questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .faq-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .faq-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        .question-link {
+            display: block;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            padding: 14px 18px;
+            font-size: 15px;
+            font-weight: 600;
+            background: rgba(0, 242, 254, 0.03);
+            transition: background 0.2s;
+        }
+        .question-link:hover {
+            background: rgba(0, 242, 254, 0.08);
+        }
+        .faq-answer {
+            padding: 16px 18px;
+            font-size: 14px;
+            color: var(--text-sub);
+            border-top: 1px solid var(--card-border);
+        }
+        .faq-answer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+        }
+        .faq-answer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Back to top button */
+        .top-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--card-bg);
+            color: var(--accent-cyan);
+            border: 1px solid var(--card-border);
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            transition: all 0.25s;
+            font-size: 20px;
+            backdrop-filter: blur(8px);
+        }
+        .top-btn:hover {
+            background: var(--accent-cyan);
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4);
+        }
+
+        @media (max-width: 480px) {
+            .server-header h1 {
+                font-size: 34px;
+            }
+            .nav-list {
+                gap: 6px;
+            }
+            .nav-link {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="top">
 
     <!-- Шапка -->
-    <div class="server-header">
+    <header class="server-header">
         <h1>AevionMC</h1>
         <p>ОБЯЗАТЕЛЬНО ПРОЧТИТЕ!</p>
-    </div>
+    </header>
 
     <!-- Основные положения -->
-    <div class="provisions" id="provisions-block">
+    <section class="provisions" id="provisions-block">
         <div class="provision-item">
-            <span class="provision-icon">➲</span> После создания аккаунта, пользователь автоматически соглашается с данными правилами! Руководство может не отправлять доказательства по поводу бана/мута/кика и т.д.
+            <span class="provision-icon">➲</span> После создания аккаунта, пользователь автоматически соглашается с данными правилами! Ст.Модератор может не отправлять доказательства по поводу бана/мута/кика и т.д.
         </div>
         <div class="provision-item" id="donate-info">
-            <span class="provision-icon">➲</span> Покупая донат на нашем сайте <a href="https://aevionmc.easydonate.ru/" target="_blank" style="color: #798cb9; text-decoration: none; font-weight: bold;">https://aevionmc.easydonate.ru/</a>, пользователь вносит денежные средства по своему решению. Денежные средства за донат мы не отдаем, Руководство проекта не несёт ответственности за возможные психологические травмы, причинённые пользователю во время игры.
+            <span class="provision-icon">➲</span> Покупая донат на нашем сайте <a href="https://aevionmc.easydonate.ru/" target="_blank" style="color: var(--accent-cyan); text-decoration: none; font-weight: bold;">https://aevionmc.easydonate.ru/</a>, пользователь вносит денежные средства по своему решению. Денежные средства за донат мы не отдаем, Ст.Модератор проекта не несёт ответственности за возможные психологические травмы, причинённые пользователю во время игры.
         </div>
         <div class="provision-item">
-            <span class="provision-icon">➲</span> Руководство проекта имеет право вносить изменения в данные правила без оповещения пользователей, Руководство проекта имеет право выдавать наказания на своё усмотрение, вопреки данным правилам, Пользователь решает сам на сколько времени наказать игрока, Утрата, передача или продажа аккаунта не являются оправданием, однако в случае обвинений в нарушении каких-либо пунктов правил, эти действия могут рассматриваться как дополнительные обстоятельства в Технической поддержке проекта через наше сообщество ВКонтакте (<a href="https://vk.ru/aevionmc" target="_blank" style="color: #798cb9; text-decoration: none;">https://vk.ru/aevionmc</a>).
+            <span class="provision-icon">➲</span> Ст.Модератор проекта имеет право вносить изменения в данные правила без оповещения пользователей, Ст.Модератор проекта имеет право выдавать наказания на своё усмотрение, вопреки данным правилам, Пользователь решает сам на сколько времени наказать игрока, Утрата, передача или продажа аккаунта не являются оправданием, однако в случае обвинений в нарушении каких-либо пунктов правил, эти действия могут рассматриваться как дополнительные обстоятельства в Технической поддержке проекта через наше сообщество ВКонтакте (<a href="https://vk.ru/aevionmc" target="_blank" style="color: var(--accent-cyan); text-decoration: none;">https://vk.ru/aevionmc</a>).
         </div>
         <div class="provision-item">
             <span class="provision-icon">➲</span> При выдаче наказания обязательно указывайте сколько раз было произведено нарушение, например: <span style="color: #bbb;">/ᴋɪᴄᴋ „ɴɪᴄᴋɴᴀʍᴇ” ᴨоʍᴇхᴀ ʙ ᴩᴇᴦионᴇ (𝟏/𝟐)</span>, соответственно, потом <span style="color: #bbb;">/ʙᴀɴ „ɴɪᴄᴋɴᴀʍᴇ” ᴨоʍᴇхᴀ ʙ ᴩᴇᴦионᴇ (𝟐/𝟐)</span> ⮕ Наказание: Кик, Кик, Бан.
         </div>
-    </div>
+    </section>
 
     <!-- Помощь по командам -->
     <div class="alert-text">
-        <span class="alert-icon">❗</span> Помощь по командам: Кик ↝ <strong>/ᴋɪᴄᴋ</strong>, Мут ↝ <strong>/ᴍᴜᴛᴇ</strong>, Бан ↝ <strong>/ʙᴀɴ</strong>.
+        <span class="alert-icon">❗</span> <span>Помощь по командам: Кик ↝ <strong>/ᴋɪᴄᴋ</strong>, Мут ↝ <strong>/ᴍᴜᴛᴇ</strong>, Бан ↝ <strong>/ʙᴀɴ</strong>.</span>
     </div>
 
-    <hr>
-
     <!-- Навигация -->
-    <div class="navigation-title">⌕ НАВИГАЦИЯ</div>
-    <ul class="nav-list">
-        <li><a href="#agreement" class="nav-link">СОГЛАШЕНИЕ</a></li>
-        <li><a href="#communication" class="nav-link">Общение</a></li>
-        <li><a href="#skins" class="nav-link">Скины</a></li>
-        <li><a href="#donators" class="nav-link">Донатеры</a></li>
-        <li><a href="#gameplay" class="nav-link">Игровой процесс</a></li>
-    </ul>
-
-    <hr>
+    <nav class="nav-wrapper">
+        <div class="navigation-title">НАВИГАЦИЯ ПО РАЗДЕЛАМ</div>
+        <ul class="nav-list">
+            <li><a href="#agreement" class="nav-link">СОГЛАШЕНИЕ</a></li>
+            <li><a href="#communication" class="nav-link">Общение</a></li>
+            <li><a href="#skins" class="nav-link">Скины</a></li>
+            <li><a href="#donators" class="nav-link">Донатеры</a></li>
+            <li><a href="#gameplay" class="nav-link">Игровой процесс</a></li>
+        </ul>
+    </nav>
 
     <!-- Примечания -->
-    <div class="notice-text">! Все баны выдаются по айпи и сиду, исключения правила про никнейм.</div>
-    <div class="notice-text">! Если нет такой возможности то обычным способом</div>
-
-    <hr>
+    <div class="notice-container">
+        <div class="notice-text">! Все баны выдаются по айпи и сиду, исключения правила про никнейм.</div>
+        <div class="notice-text">! Если нет такой возможности то обычным способом</div>
+    </div>
 
     <!-- РАЗДЕЛ: СОГЛАШЕНИЕ -->
     <div id="agreement" class="section-title">СОГЛАШЕНИЕ</div>
-    <div style="font-style: italic; color: #aaa; margin-bottom: 15px; padding-left: 5px;">Основные пункты соглашения прописаны в блоке «Основные положения» в начале страницы. Создавая аккаунт, вы полностью принимаете условия проекта AevionMC.</div>
-
-    <hr>
+    <div style="font-style: italic; color: var(--text-sub); margin-bottom: 20px; font-size: 14px;">Основные пункты соглашения прописаны в блоке «Основные положения» в начале страницы. Создавая аккаунт, вы полностью принимаете условия проекта AevionMC.</div>
 
     <!-- РАЗДЕЛ: ОБЩЕНИЕ -->
     <div id="communication" class="section-title">ОБЩЕНИЕ</div>
@@ -302,7 +426,7 @@
         <div class="rule-punishment">3 раз - Добавлять по 3ч</div>
         <div class="exception-box">
             <strong>Слова исключения:</strong> (Ezz, Нуб, Клоун, Бот, Рак, Слабость, Гей, Транс, Гадина, Глухой, Слепой, Толстый, Бомж, Глупый, Какашка, Тупой, Дурак, Жирный).<br>
-            <span style="color: #aaa; font-size: 13px;">Для самых умных: за эти слова не дают наказание.</span>
+            <span style="color: var(--text-dim); font-size: 12px;">Для самых умных: за эти слова не дают наказание.</span>
         </div>
     </div>
 
@@ -345,8 +469,6 @@
         <div class="rule-punishment">Наказание - бан на 3 часа</div>
     </div>
 
-    <hr>
-
     <!-- РАЗДЕЛ: СКИНЫ -->
     <div id="skins" class="section-title">Скины</div>
 
@@ -354,8 +476,6 @@
         <div class="rule-head">２.１) Установка префикса / скина, который содержит в себе нецензурные выражения, порнографический посыл, любые оскорбления. Постройка половых органов или символик межнациональной розни:</div>
         <div class="rule-punishment">1 раз - бан 30 минут</div>
     </div>
-
-    <hr>
 
     <!-- РАЗДЕЛ: ДОНАТЕРЫ -->
     <div id="donators" class="section-title">Донатеры</div>
@@ -365,7 +485,7 @@
         <div class="rule-punishment">1 раз - бан 1 дней</div>
         <div class="rule-punishment">2 раз - бан 3 дня</div>
         <div class="rule-punishment">3 раз - понижение привилегии</div>
-        <div style="font-size: 13px; color: #aaa; margin-top: 5px; padding-left: 15px;">* Не относится к тем, кому доверяет администрация.</div>
+        <div style="font-size: 13px; color: var(--text-dim); margin-top: 5px; padding-left: 18px;">* Не относится к тем, кому доверяет администрация.</div>
     </div>
 
     <div class="rule-item" id="rule-3-2">
@@ -374,15 +494,13 @@
         <div class="rule-punishment">2 раз - бан на 3 дня + понижение привилегии</div>
     </div>
 
-    <hr>
-
     <!-- РАЗДЕЛ: ИГРОВОЙ ПРОЦЕСС -->
     <div id="gameplay" class="section-title">ИГРОВОЙ ПРОЦЕСС</div>
 
     <div class="rule-item danger" id="rule-4-1">
         <div class="rule-head">４.１) Продажа чего-либо за реальные деньги:</div>
         <div class="rule-punishment">Наказание - вечный бан + снятие привилегии.</div>
-        <div style="font-size: 13px; color: #2ecc71; margin-top: 5px; padding-left: 15px;">Исключение: покупка на сайте сервера в обмен на ресурсы игры.</div>
+        <div style="font-size: 13px; color: var(--success-color); margin-top: 5px; padding-left: 18px;">Исключение: покупка на сайте сервера в обмен на ресурсы игры.</div>
     </div>
 
     <div class="rule-item" id="rule-4-2">
@@ -435,7 +553,7 @@
     <div class="rule-item danger" id="rule-4-11">
         <div class="rule-head">４.１１) Использование стороннего ПО, которое дает преимущество перед другими игроками в режиме PVP на пк (любой вид автокликера запрещен):</div>
         <div class="rule-punishment">Наказание - бан на 21 день</div>
-        <div style="font-size: 13px; color: #ff8888; margin-top: 5px; padding-left: 15px;">Примечание: Тим с игроком, который использует запрещенное ПО - бан от 3 до 5 дней</div>
+        <div style="font-size: 13px; color: var(--danger-color); margin-top: 5px; padding-left: 18px;">Примечание: Тим с игроком, который использует запрещенное ПО - бан от 3 до 5 дней</div>
     </div>
 
     <div class="rule-item" id="rule-4-12">
@@ -481,35 +599,33 @@
         <div class="rule-punishment">Наказание — бан 3 часа.</div>
     </div>
 
-    <hr>
-
     <!-- Блок Вопросов (FAQ) -->
     <div class="questions-title" id="faq-section">• Вопросы?</div>
     <div class="questions-list">
         
-        <div>
+        <div class="faq-card">
             <a href="#rule-4-13" class="question-link">? Что делать если меня забанили</a>
             <div class="faq-answer">
                 Если вы получили бан и считаете его ошибочным, обратитесь в нашу техническую поддержку в официальной группе ВКонтакте: 
-                <a href="https://vk.ru/aevionmc" target="_blank">vk.ru/aevionmc</a>. Напишите свой ник, суть проблемы и ожидайте ответа руководства. Помните, что обход блокировки (<a href="#rule-4-13">пункт 4.13</a>) или выдача неверных банов (<a href="#rule-3-1">пункт 3.1</a>) строго наказываются.
+                <a href="https://vk.ru/aevionmc" target="_blank">vk.ru/aevionmc</a>. Напишите свой ник, суть проблемы и ожидайте ответа Ст.Модератора. Помните, что обход блокировки (<a href="#rule-4-13">пункт 4.13</a>) или выдача неверных банов (<a href="#rule-3-1">пункт 3.1</a>) строго наказываются.
             </div>
         </div>
 
-        <div>
+        <div class="faq-card">
             <a href="#rule-4-14" class="question-link">? Что делать если меня замутили</a>
             <div class="faq-answer">
                 Блокировка чата выдается за нарушение правил общения (флуд, оскорбления, спам). Ознакомьтесь с разделом <a href="#communication">Общение</a>. Попытка обхода мута карается баном по <a href="#rule-4-14">пункту 4.14</a>. Если вы уверены, что мут выдан некорректно игроком с донатом, вы можете пожаловаться на него в личные сообщения сообщества <a href="https://vk.ru/aevionmc" target="_blank">ВКонтакте</a>, предоставив доказательства.
             </div>
         </div>
 
-        <div>
+        <div class="faq-card">
             <a href="#rule-4-4" class="question-link">? Как попасть в помощники сервера</a>
             <div class="faq-answer">
                 Набор в персонал сервера (хелперы/помощники) проходит строго через официальную группу ВКонтакте <a href="https://vk.ru/aevionmc" target="_blank">vk.ru/aevionmc</a> во время открытых заявок. Следите за новостями на стене. Помните: выдача себя за администрацию до открытия заявок запрещена (<a href="#rule-4-4">пункт 4.4</a>), равно как и установка ложных префиксов (<a href="#rule-3-2">пункт 3.2</a>).
             </div>
         </div>
 
-        <div>
+        <div class="faq-card">
             <a href="#donate-info" class="question-link">? Где можно купить донат</a>
             <div class="faq-answer">
                 Официальный магазин сервера AevionMC находится только по адресу: 
@@ -520,6 +636,9 @@
     </div>
 
 </div>
+
+<!-- Кнопка наверх -->
+<a href="#top" class="top-btn" title="Наверх">↑</a>
 
 </body>
 </html>
